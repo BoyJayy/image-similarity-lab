@@ -8,7 +8,7 @@
  * to solve it: the most common way is to use a comparator and sort the vector
  */
 namespace imgsim {
-    std::vector<imgsim::Match> brute_force_k(std::uint64_t query, std::vector<std::uint64_t>& hashes, std::size_t k){
+    std::vector<imgsim::Match> brute_force_k(std::uint64_t query, const std::vector<std::uint64_t>& hashes, std::size_t k){
         std::vector<imgsim::Match> matches;
         matches.reserve(hashes.size());
         for (std::size_t i = 0; i < hashes.size(); i++) {

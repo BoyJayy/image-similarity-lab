@@ -10,6 +10,6 @@ namespace imgsim {
         std::uint32_t distance;
     };
     [[nodiscard]] std::vector<Match> brute_force_k(std::uint64_t query,
-            std::vector<std::uint64_t>& hashes,
+            const std::vector<std::uint64_t>& hashes,
             std::size_t k);
 }
