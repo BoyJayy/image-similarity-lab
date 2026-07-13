@@ -11,7 +11,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_library(imgsim src/hash.cpp src/search.cpp)
+add_library(imgsim 
+    src/hash.cpp 
+    src/search.cpp
+)
 target_include_directories(imgsim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(imgsim_smoke src/main.cpp)
