@@ -13,5 +13,6 @@ namespace imgsim {
     std::uint32_t hamming_distance(ImgHash a, ImgHash b) {
         return static_cast<uint32_t>(std::popcount(a^b));
     }
+    
 }
 
