@@ -26,7 +26,7 @@ enable_testing()
 add_executable(imgsim_tests
     tests/hash_test.cpp
     tests/search_test.cpp
-    #tests/sha256_test.cpp
+    tests/sha256_test.cpp
 )
 
 target_link_libraries(imgsim_tests PRIVATE
