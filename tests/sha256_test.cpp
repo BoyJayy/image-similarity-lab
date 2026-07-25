@@ -3,7 +3,8 @@
 #include <filesystem>
 #include <fstream>
 #include <array>
-
+#include <stdexcept>
+#include <string>
 
 std::filesystem::path get_file_path(const std::string& filename) {
         return std::filesystem::path(__FILE__).parent_path() 
@@ -82,4 +83,15 @@ TEST(Sha256FileTest, ReadsDataAfterFirstBuffer) {
         imgsim::sha256_file(second_path)
     );
     std::filesystem::remove_all(temp_directory);
+}
+
+TEST(Sha256FileTest, MissingFileThrows) {
+    const auto missingPath =
+        std::filesystem::temp_directory_path() /
+        "imgsim_definitely_missing_file.bin";
+    std::filesystem::remove(missingPath);
+    EXPECT_THROW(
+        imgsim::sha256_file(missingPath),
+        std::runtime_error
+    );
 }
