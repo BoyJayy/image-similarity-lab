@@ -31,6 +31,7 @@ add_executable(imgsim_tests
 
 target_link_libraries(imgsim_tests PRIVATE
     imgsim
+    #misc
     GTest::gtest_main
     OpenSSL::Crypto
 )

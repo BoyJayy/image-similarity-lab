@@ -4,6 +4,13 @@
 #include <fstream>
 #include <array>
 
+
+std::filesystem::path get_file_path(const std::string& filename) {
+        return std::filesystem::path(__FILE__).parent_path() 
+        / "data"
+        / filename;
+}
+
 TEST(Sha256FileTest, ChecksSHA256) {
     /* okay at first ill get sha256 of string "hello" in terminal by openssl
         echo -n "hello" | openssl dgst -sha256
@@ -27,4 +34,52 @@ TEST(Sha256FileTest, ChecksSHA256) {
     const imgsim::sha256_hash_t actualHash = imgsim::sha256_file(tempFilePath);
     EXPECT_EQ(actualHash, expectedHash); // check equality of hashes
     std::filesystem::remove(tempFilePath); //cleanup
+}
+
+/*TEST (Sha256FileTest, TwoExactPictures) {
+    const std::filesystem::path tempFilePath1 = get_file_path("pic1_test.png");
+    ASSERT_TRUE(std::filesystem::exists(tempFilePath1));
+    const std::filesystem::path tempFilePath2 = get_file_path("pic2_test.png");
+    ASSERT_TRUE(std::filesystem::exists(tempFilePath2));
+    const imgsim::sha256_hash_t hash1 = imgsim::sha256_file(tempFilePath1);
+    const imgsim::sha256_hash_t hash2 = imgsim::sha256_file(tempFilePath2);
+    EXPECT_NE(hash1, hash2); // check equality of hashes for two identical pictures
+}*/
+
+TEST(Sha256FileTest, ReadsDataAfterFirstBuffer) {
+    const std::filesystem::path temp_directory =
+        std::filesystem::temp_directory_path()
+        / "imgsim_sha256_large_file_test";
+
+    std::filesystem::remove_all(temp_directory);
+    std::filesystem::create_directories(temp_directory);
+    const std::filesystem::path first_path =
+        temp_directory / "first.bin";
+    const std::filesystem::path second_path =
+        temp_directory / "second.bin";
+    const std::string common_data(1024 * 1024, 'a');
+    {
+        std::ofstream first_file(first_path, std::ios::binary);
+        std::ofstream second_file(second_path, std::ios::binary);
+        ASSERT_TRUE(first_file.is_open());
+        ASSERT_TRUE(second_file.is_open());
+        first_file.write(
+            common_data.data(),
+            static_cast<std::streamsize>(common_data.size())
+        );
+        second_file.write(
+            common_data.data(),
+            static_cast<std::streamsize>(common_data.size())
+        );
+        // these bytes are after the first 1 MiB buffer.
+        first_file.put('x');
+        second_file.put('y');
+        ASSERT_TRUE(first_file.good());
+        ASSERT_TRUE(second_file.good());
+    }
+    EXPECT_NE(
+        imgsim::sha256_file(first_path),
+        imgsim::sha256_file(second_path)
+    );
+    std::filesystem::remove_all(temp_directory);
 }
