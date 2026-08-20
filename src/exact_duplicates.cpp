@@ -8,6 +8,7 @@
 
 
 namespace imgsim {
+    // we cant work with our sha256_hash_t as key in unordered_map cuz it doesnt have hash function, so we will create our own
     struct Sha256Hasher {
     std::size_t operator()(const imgsim::sha256_hash_t& hash) const noexcept {
         std::size_t result = 0;
