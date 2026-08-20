@@ -4,6 +4,8 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <iostream>
+
 
 namespace imgsim {
     std::vector<DuplicateGroup> find_exact_duplicates(const DuplicateGroup& files) {
@@ -15,39 +17,33 @@ namespace imgsim {
                 std::uintmax_t file_size = std::filesystem::file_size(file); 
                 size_to_files[file_size].push_back(file);
             }
-        std::vector<DuplicateGroup> result;
-        for (const auto& [size, group] : size_to_files) {
-            if (group.size() < 2) continue; // skip groups with less than 2 files
-            vector<sha256_hash_t> hashes;
-            for (const auto& file : group) {
+
+        /* 
+            x bytes: [file1, file2, file3]
+            y bytes: [file4, file5]
+            z bytes: [file6]
+            like this and check sha256 for each
+        */
+       std::vector<DuplicateGroup> result;
+        for (const auto& [size, group]: size_to_files) {
+            if (group.size() < 2) continue; // not possible to have duplicates if only one file of that size
+            // check sha256 for each file in the group
+            std::unordered_map<sha256_hash_t, DuplicateGroup> hash_to_files;
+            for (auto& file : group) {
                 try {
-                    hashes.push_back(sha256_file(file));
+                    sha256_hash_t hash = sha256_file(file);
+                    hash_to_files[hash].push_back(file);
                 } catch (const std::exception& e) {
-                    // handle the error (e.g., log it, skip the file, etc.)
-                    std::cerr << "Error hashing file " << file << ": " << e.what() << std::endl;
+                    std::cerr << "Error processing file " << file << ": " << e.what() << std::endl;
                 }
             }
-            //attention
-            //ITS DOESNT WORK I FORGOT TO STORE HASHES WITH FILES SO I CANT FIND DUPLICATES BY HASHES ILL REWORK IT LATER
-            
-            
-            
-            //now ill use binary search to find duplicates by hash (avoids O(n^2) complexity)
-            sort(hashes.begin(), hashes.end());
-            for (const auto& hash: hashes) {
-                int lb = std::lower_bound(hashes.begin(), hashes.end(), hash) - hashes.begin(); // index of first element not less than hash
-                int ub = std::upper_bound(hashes.begin(), hashes.end(), hash) - hashes.begin(); // index of first element greater than has h
-                //so the formula is lb-ub = number of elements equal to hash 
-                if (ub - lb > 1) { // if there are duplicates
-                    DuplicateGroup duplicate_group;
-                    for (int i = lb; i < ub; ++i) {
-                        duplicate_group.push_back(group[i]);
-                    }
-                    result.push_back(duplicate_group);
+            for (const auto& [hash, file_group] : hash_to_files) {
+                if (file_group.size() > 1) {
+                    result.push_back(file_group);
                 }
             }
         }
-        return result;
 
+        return result;
     }
 }

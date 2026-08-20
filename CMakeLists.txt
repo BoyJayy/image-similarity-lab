@@ -15,6 +15,7 @@ add_library(imgsim
     src/hash.cpp 
     src/search.cpp
     src/sha256.cpp
+    src/exact_duplicates.cpp
 )
 target_include_directories(imgsim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(imgsim PRIVATE OpenSSL::Crypto)
@@ -27,6 +28,7 @@ add_executable(imgsim_tests
     tests/hash_test.cpp
     tests/search_test.cpp
     tests/sha256_test.cpp
+    tests/exact_duplicates_test.cpp
 )
 
 target_link_libraries(imgsim_tests PRIVATE
