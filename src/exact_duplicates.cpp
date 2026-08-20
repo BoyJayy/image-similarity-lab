@@ -8,6 +8,15 @@
 
 
 namespace imgsim {
+    struct Sha256Hasher {
+    std::size_t operator()(const imgsim::sha256_hash_t& hash) const noexcept {
+        std::size_t result = 0;
+        for (unsigned char byte : hash) {
+            result ^= static_cast<std::size_t>(byte) + 0x9e3779b9 + (result << 6) + (result >> 2);
+        }
+        return result;
+    }
+    };
     std::vector<DuplicateGroup> find_exact_duplicates(const DuplicateGroup& files) {
         std::unordered_map<std::uintmax_t, DuplicateGroup> size_to_files;
         // we will store files by size by map (uintmax_t cuz filesystem::file_size returns uintmax_t)
@@ -28,7 +37,7 @@ namespace imgsim {
         for (const auto& [size, group]: size_to_files) {
             if (group.size() < 2) continue; // not possible to have duplicates if only one file of that size
             // check sha256 for each file in the group
-            std::unordered_map<sha256_hash_t, DuplicateGroup> hash_to_files;
+            std::unordered_map<sha256_hash_t, DuplicateGroup, Sha256Hasher> hash_to_files;
             for (auto& file : group) {
                 try {
                     sha256_hash_t hash = sha256_file(file);
