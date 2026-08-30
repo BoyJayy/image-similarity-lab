@@ -33,4 +33,6 @@ TEST(ExactDuplicatesTest, IdenticalFilesAreGroupedTogether) {
     EXPECT_TRUE(contains_path(result[0], file1));
     EXPECT_TRUE(contains_path(result[0], file2));
 }
+
+// later add more tests for different scenarios, like files with different content, empty files, etc.
 }
