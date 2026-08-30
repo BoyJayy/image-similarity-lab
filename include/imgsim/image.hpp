@@ -4,6 +4,11 @@
 #include <vector>
 
 namespace imgsim {
+struct Image {
+    std::size_t width{};
+    std::size_t height{};
+    std::vector<std::uint8_t> data; 
+};
 struct GrayScale {
     std::size_t width{};
     std::size_t height{};
