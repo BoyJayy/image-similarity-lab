@@ -38,6 +38,7 @@ add_executable(imgsim_tests
     tests/sha256_test.cpp
     tests/exact_duplicates_test.cpp
     tests/grayscale_resize_test.cpp
+    tests/rgb_load_test.cpp
 )
 
 target_link_libraries(imgsim_tests PRIVATE

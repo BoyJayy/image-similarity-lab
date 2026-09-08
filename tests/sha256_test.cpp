@@ -6,12 +6,6 @@
 #include <stdexcept>
 #include <string>
 
-std::filesystem::path get_file_path(const std::string& filename) {
-        return std::filesystem::path(__FILE__).parent_path() 
-        / "data"
-        / filename;
-}
-
 TEST(Sha256FileTest, ChecksSHA256) {
     /* okay at first ill get sha256 of string "hello" in terminal by openssl
         echo -n "hello" | openssl dgst -sha256
