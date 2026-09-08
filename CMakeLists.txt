@@ -20,7 +20,12 @@ add_library(imgsim
     src/exact_duplicates.cpp
     src/image.cpp
 )
-target_include_directories(imgsim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(imgsim
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb
+)
 target_link_libraries(imgsim PRIVATE OpenSSL::Crypto)
 add_executable(imgsim_smoke src/main.cpp)
 target_link_libraries(imgsim_smoke PRIVATE imgsim OpenSSL::Crypto)

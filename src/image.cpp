@@ -1,10 +1,37 @@
+#include <cstddef>
 #include <imgsim/image.hpp>
 #include <algorithm>
+#include <iterator>
 #include <stdexcept>
 #include <vector>
 #include <cmath>
+#include <memory>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 
 namespace imgsim {
+
+RGBImage load_RGB_image(const std::filesystem::path path) {
+    int width=0,height=0,channels=0;
+    constexpr int desired_channels = 3;
+    // instead of using stbi_uc* we use unique ptr to avoid memory leak on phase where we use stbi_image_free (delete doesnt work there)
+    //also if we used stdi_image_free manually in the end, there is a chance to get exception and receive leak again
+    std::unique_ptr<stbi_uc,decltype(&stbi_image_free)> pixels(stbi_load(path.string().c_str(),&width,&height,&channels,desired_channels), stbi_image_free);
+    if (!pixels) {
+        const char* reason = stbi_failure_reason();
+        throw std::runtime_error( "failed to load image '" + path.string() + "': " +(reason ? reason : "unknown error"));
+    }
+    if (width<= 0 || height<=0) {
+        throw std::runtime_error("loaded image has invalid dimensions: " + path.string());
+    }
+    RGBImage image;
+    image.height=static_cast<size_t>(height);
+    image.width=static_cast<size_t>(width);
+    // get() is just raw pointer tho
+    image.data.assign(pixels.get(),pixels.get() + image.width*image.height*desired_channels);
+    return image;
+}
 
 GrayScale convert_to_grayscale(const std::vector<std::uint8_t>& rgb_data, std::size_t width, std::size_t height) {
     if (rgb_data.size() != width * height * 3) {
