@@ -50,7 +50,7 @@ TEST(AverageHashTest, BrightBottomHalfSetsLowerThirtyTwoBits) {
 }
 
 TEST(AverageHashTest, ExactTwoPicsHash) {
-    imgsim::ImgHash fhash = imgsim::average_hash(test_helpers::data_test_path("pic1_test.jbg"));
-    imgsim::ImgHash shash = imgsim::average_hash(test_helpers::data_test_path("pic2_test.jbg"));
+    imgsim::ImgHash fhash = imgsim::average_hash(test_helpers::data_test_path("pic1_test.jpg"));
+    imgsim::ImgHash shash = imgsim::average_hash(test_helpers::data_test_path("pic2_test.jpg"));
     EXPECT_EQ(imgsim::hamming_distance(fhash, shash), 0);
 }

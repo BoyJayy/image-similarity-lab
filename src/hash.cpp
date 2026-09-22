@@ -23,10 +23,10 @@ namespace imgsim {
     ImgHash average_hash(const GrayScale& image) { 
         GrayScale resized=resize_grayscale(image, 8, 8);
         std::uint64_t sum = std::accumulate(resized.data.begin(), resized.data.end(),uint64_t{0});
-        ImgHash hash;
+        ImgHash hash=0;
         for (auto& pixel: resized.data) {
             hash <<= 1;
-            if (static_cast<std::uint64_t>(pixel) * 8 > sum) {
+            if (static_cast<std::uint64_t>(pixel) * 64 > sum) {
                 hash |= ImgHash{1};
             }
         }
