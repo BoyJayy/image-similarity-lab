@@ -33,7 +33,9 @@ RGBImage load_RGB_image(const std::filesystem::path path) {
     return image;
 }
 
-GrayScale convert_to_grayscale(const std::vector<std::uint8_t>& rgb_data, std::size_t width, std::size_t height) {
+GrayScale convert_to_grayscale(const RGBImage& rgb) {
+    std::size_t width = rgb.width, height = rgb.height;
+    std::vector<std::uint8_t> rgb_data = rgb.data;
     if (rgb_data.size() != width * height * 3) {
         throw std::invalid_argument("RGB data size does not match image dimensions");
     }
