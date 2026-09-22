@@ -80,12 +80,7 @@ TEST(Sha256FileTest, ReadsDataAfterFirstBuffer) {
 }
 
 TEST(Sha256FileTest, MissingFileThrows) {
-    const auto missingPath =
-        std::filesystem::temp_directory_path() /
-        "imgsim_definitely_missing_file.bin";
+    const auto missingPath =std::filesystem::temp_directory_path() /"imgsim_definitely_missing_file.bin";
     std::filesystem::remove(missingPath);
-    EXPECT_THROW(
-        imgsim::sha256_file(missingPath),
-        std::runtime_error
-    );
+    EXPECT_THROW(imgsim::sha256_file(missingPath),std::runtime_error);
 }
