@@ -48,6 +48,13 @@ target_link_libraries(imgsim_tests PRIVATE
     OpenSSL::Crypto
 )
 
+add_executable(ahash_experiment
+    experiments/ahash_experiment.cpp
+)
+target_link_libraries(ahash_experiment PRIVATE
+    imgsim
+)
+
 #target_compile_features(imgsim PUBLIC cxx_std_20)
 
 include(GoogleTest)
