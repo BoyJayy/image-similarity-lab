@@ -34,7 +34,7 @@ namespace imgsim {
         uint32_t w[64]; //message schedule ( )
         uint32_t tv[8];
         uint32_t i;
-
+        //
         for (i=0; i<16; ++i){
             w[i] = (uint32_t) chunk[0] << 24 | (uint32_t) chunk[1] << 16 | (uint32_t) chunk[2] << 8 | (uint32_t) chunk[3];
             chunk += 4;
